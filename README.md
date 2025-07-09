@@ -34,6 +34,13 @@ The project is structured into several scripts for implementation, analysis and 
     python src/parallel_blast.py
     ```
     The script will generate random sequences and display a detailed comparison of execution times between sequential and parallel versions.
+
+    ## 📌 Citation
+If you use this project, please cite it as:
+
+Ayoub Laib (2025), *Parallel BLAST Algorithm Implementation in Python*, GitHub repository: https://github.com/aylaib/Parallel-BLAST-Implementation
+
+
 ## 📚 Reference Documents
 - **[Complete Project Report](./Rapport_Paralleisation_BLAST.pdf)** : This document contains the detailed presentation of BLAST, complexity analysis, parallelization model, performance results and conclusion.
 - **[Project Statement](./Enonce_Projet_ACP.pdf)** : The original specifications.
