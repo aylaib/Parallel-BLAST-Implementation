@@ -1,58 +1,39 @@
-# Implémentation Parallèle de l'Algorithme BLAST en Python
-
-Ce projet, réalisé dans le cadre du module "Architecture et Calcul Parallèle", présente l'implémentation et l'analyse de performance d'une version parallélisée de l'algorithme BLAST (Basic Local Alignment Search Tool).
-
-L'objectif principal est d'accélérer l'exécution de BLAST, un algorithme essentiel en bio-informatique, en exploitant les architectures de processeurs multi-cœurs à l'aide de la bibliothèque `multiprocessing` de Python.
-
-## 📊 Analyse de Performance
-
-Une analyse comparative a été menée entre les versions séquentielle et parallèle de l'algorithme. Les résultats montrent une **accélération (speedup) significative de 2.90x** sur 8 processus, avec une efficacité de 36.22%. L'étape la plus coûteuse, l'extension des alignements, a été accélérée de **4.33x**.
-
-### Complexité Temporelle et Spatiale (Version Séquentielle)
-
-L'analyse de la version séquentielle a confirmé une complexité temporelle proche de **O(n²)** et une complexité spatiale proche de **O(n)**, ce qui est cohérent avec la théorie de BLAST.
-
-![Analyse de la Complexité](./results_images/blast_complexity_analysis.png)
-_Graphiques montrant la complexité temporelle (gauche) et spatiale (droite) de l'implémentation séquentielle._
-
-## 🛠️ Modèle de Parallélisation
-
-Après une analyse par *profiling* (`cProfile`) pour identifier les goulots d'étranglement, un modèle de pipeline en 3 étapes a été conçu et implémenté :
-
-1.  **Création de l'Index (25% des cœurs) :** La séquence "sujet" est découpée en `chunks` et l'index des mots est construit en parallèle.
-2.  **Recherche des Seeds (25% des cœurs) :** La séquence "requête" est également découpée pour rechercher les correspondances initiales (seeds) dans l'index parallèlement.
-3.  **Extension des Alignements (50% des cœurs) :** C'est l'étape la plus coûteuse en calcul. Les seeds trouvées sont distribuées entre plusieurs processus pour étendre et scorer les alignements simultanément.
-
-La communication entre les processus est gérée par un système de files d'attente (`multiprocessing.Queue`) pour assurer un flux de données efficace.
-
-## 🚀 Scripts et Utilisation
-
-Le projet est structuré en plusieurs scripts pour l'implémentation, l'analyse et la comparaison.
-
-- **`src/sequential_blast.py`** : L'implémentation de référence de BLAST, purement séquentielle.
-- **`src/parallel_blast.py`** : L'implémentation parallèle qui compare les performances avec la version séquentielle.
-- **`src/profiling_analysis.py`** : Script utilisé pour profiler la version séquentielle et identifier les goulots d'étranglement.
-- **`src/blast-sequentiel-temp.py` & `src/blast-sequentiel-spat.py`** : Scripts dédiés à l'analyse empirique des complexités.
-
-### Comment l'Exécuter
-
-1.  **Clonez le dépôt :**
+# Parallel BLAST Algorithm Implementation in Python
+This project, carried out as part of the "Architecture and Parallel Computing" module, presents the implementation and performance analysis of a parallelized version of the BLAST algorithm (Basic Local Alignment Search Tool).
+The main objective is to accelerate the execution of BLAST, an essential algorithm in bioinformatics, by exploiting multi-core processor architectures using Python's `multiprocessing` library.
+## 📊 Performance Analysis
+A comparative analysis was conducted between the sequential and parallel versions of the algorithm. The results show a **significant speedup of 2.90x** on 8 processes, with an efficiency of 36.22%. The most expensive step, alignment extension, was accelerated by **4.33x**.
+### Time and Space Complexity (Sequential Version)
+The analysis of the sequential version confirmed a time complexity close to **O(n²)** and a space complexity close to **O(n)**, which is consistent with BLAST theory.
+![Complexity Analysis](./results_images/blast_complexity_analysis.png)
+*Graphs showing the time complexity (left) and space complexity (right) of the sequential implementation.*
+## 🛠️ Parallelization Model
+After a profiling analysis (`cProfile`) to identify bottlenecks, a 3-stage pipeline model was designed and implemented:
+1.  **Index Creation (25% of cores):** The "subject" sequence is divided into `chunks` and the word index is built in parallel.
+2.  **Seed Search (25% of cores):** The "query" sequence is also divided to search for initial matches (seeds) in the index in parallel.
+3.  **Alignment Extension (50% of cores):** This is the most computationally expensive step. The found seeds are distributed among multiple processes to extend and score alignments simultaneously.
+Communication between processes is managed by a queue system (`multiprocessing.Queue`) to ensure efficient data flow.
+## 🚀 Scripts and Usage
+The project is structured into several scripts for implementation, analysis and comparison.
+- **`src/sequential_blast.py`** : The reference implementation of BLAST, purely sequential.
+- **`src/parallel_blast.py`** : The parallel implementation that compares performance with the sequential version.
+- **`src/profiling_analysis.py`** : Script used to profile the sequential version and identify bottlenecks.
+- **`src/blast-sequentiel-temp.py` & `src/blast-sequentiel-spat.py`** : Scripts dedicated to empirical complexity analysis.
+### How to Run
+1.  **Clone the repository:**
     ```bash
-    git clone https://github.com/VOTRE_NOM_UTILISATEUR/Parallel-BLAST-Implementation.git
+    git clone https://github.com/YOUR_USERNAME/Parallel-BLAST-Implementation.git
     cd Parallel-BLAST-Implementation
     ```
-
-2.  **Installez les dépendances :**
+2.  **Install dependencies:**
     ```bash
     pip install -r requirements.txt
     ```
-
-3.  **Exécutez le script principal de comparaison :**
+3.  **Run the main comparison script:**
     ```bash
     python src/parallel_blast.py
     ```
-    Le script générera des séquences aléatoires et affichera une comparaison détaillée des temps d'exécution entre les versions séquentielle et parallèle.
-
-## 📚 Documents de Référence
-- **[Rapport Complet du Projet](./Rapport_Paralleisation_BLAST.pdf)** : Ce document contient la présentation détaillée de BLAST, l'analyse de complexité, le modèle de parallélisation, les résultats de performance et la conclusion.
-- **[Énoncé du Projet](./Enonce_Projet_ACP.pdf)** : Le cahier des charges original.
+    The script will generate random sequences and display a detailed comparison of execution times between sequential and parallel versions.
+## 📚 Reference Documents
+- **[Complete Project Report](./Rapport_Paralleisation_BLAST.pdf)** : This document contains the detailed presentation of BLAST, complexity analysis, parallelization model, performance results and conclusion.
+- **[Project Statement](./Enonce_Projet_ACP.pdf)** : The original specifications.
